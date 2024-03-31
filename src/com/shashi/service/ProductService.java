@@ -35,4 +35,9 @@ public interface ProductService {
 	public boolean sellNProduct(String prodId, int n);
 
 	public int getProductQuantity(String prodId);
+	
+
+	List<ProductBean> getAllProductsByRange(String start, String end);
+
+	List<ProductBean> getAllProductsByOrder(String type);
 }

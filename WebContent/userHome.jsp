@@ -40,9 +40,33 @@
 	} else if (type != null) {
 		products = prodDao.getAllProductsByType(type);
 		message = "Showing Results for '" + type + "'";
-	} else {
+	}else
+		if(request.getAttribute("sortProducts")!=null)
+		{
+			products = (List<ProductBean>) request.getAttribute("sortProducts");
+		}else
+	
+	if(request.getAttribute("products")!=null)
+	{
+		products = (List<ProductBean>) request.getAttribute("products");
+	}
+	
+	else {
 		products = prodDao.getAllProducts();
 	}
+	
+	
+	 double minPrice = 0; // Default minimum price
+	    double maxPrice = Double.MAX_VALUE; // Default maximum price
+	    String minPriceStr = request.getParameter("minPrice");
+	    String maxPriceStr = request.getParameter("maxPrice");
+
+	   
+		/* if (products.isEmpty()) {
+			message = "No items found for the search '" + (search != null ? search : type) + "'";
+			filteredProducts = prodDao.getAllProducts();
+		} */
+	
 	if (products.isEmpty()) {
 		message = "No items found for the search '" + (search != null ? search : type) + "'";
 		products = prodDao.getAllProducts();
@@ -57,6 +81,115 @@
 		style="color: black; font-size: 14px; font-weight: bold;"><%=message%></div>
 	<!-- <script>document.getElementById('mycart').innerHTML='<i data-count="20" class="fa fa-shopping-cart fa-3x icon-white badge" style="background-color:#333;margin:0px;padding:0px; margin-top:5px;"></i>'</script>
  -->
+ 		<!-- Price Range Filter -->
+   <div class="container" style="margin-bottom:20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form method="get" id="priceFilterForm" class="form-inline text-center" action="./filterProduct">
+                <div class="form-group">
+                    <label for="minPrice">Min Price:</label>
+                    <input type="text" class="form-control" id="minPrice" name="minPrice" placeholder="Min">
+                </div>
+                <div class="form-group">
+                    <label for="maxPrice">Max Price:</label>
+                    <input type="text" class="form-control" id="maxPrice" name="maxPrice" placeholder="Max" >
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-bottom:20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-inline text-center">
+                <div class="form-group">
+                <form method="get" id="priceFilterForm" class="form-inline text-center" action="./sortProductSrv">
+                    <label for="sortOptions">Sort By:</label>
+                    <select class="form-control" id="sortOptions" name="sortOptions">
+                        <option value="lowToHigh">Price: Low to High</option>
+                        <option value="highToLow">Price: High to Low</option>
+                        <!-- <option value="avgCustomerReview">Avg. Customer Review</option>
+                        <option value="newestArrivals">Newest Arrivals</option> -->
+                    </select>
+                    <button id="sortButton" class="btn btn-primary">Sort</button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- End of Price Range Filter -->
+ 
+   <!-- <script>
+        $(document).ready(function() {
+            $('#priceFilterForm').submit(function(event) {
+                // Get the values of minPrice and maxPrice
+                var minPrice = parseFloat($('#minPrice').val());
+                var maxPrice = parseFloat($('#maxPrice').val());
+
+                // Check if minPrice is greater than maxPrice
+                if (minPrice > maxPrice) {
+                    // Show alert message
+                    alert("Minimum price cannot be greater than maximum price!");
+                    // Prevent form submission
+                    event.preventDefault();
+                }
+            });
+
+            $('#sortButton').click(function() {
+                var sortOption = $('#sortOptions').val();
+                // Send an AJAX request to the server to fetch data based on the selected sorting option
+                $.ajax({
+                    type: 'GET',
+                    url: 'sortDataServlet',
+                    data: {
+                        sortOption: sortOption
+                    },
+                    success: function(response) {
+                        // Update the product list with the sorted data
+                        $('#productList').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script> -->
+ 
+ 
+  <script>
+       
+            $('#maxPrice').keypress(function (event) {
+                if (event.keyCode === 13) { // Enter key pressed
+                    event.preventDefault();
+                    applyPriceFilter();
+                }
+            });
+
+            function applyPriceFilter() {
+                var minPrice = parseFloat($('#minPrice').val());
+                var maxPrice = parseFloat($('#maxPrice').val());
+
+                if (minPrice > maxPrice) {
+                    alert("Minimum price cannot be greater than maximum price!");
+                    return;
+                }
+
+                $('#priceFilterForm').submit();
+            }
+            /* $('#sortOptions').change(function() {
+                $('#priceFilterForm').submit(); // Submit the form when selection changes
+            }); */
+        
+    </script>
+ 
+ 
 	<!-- Start of Product Items List -->
 	<div class="container">
 		<div class="row text-center">
