@@ -264,7 +264,93 @@ public class ProductServiceImpl implements ProductService {
 
 		return products;
 	}
+	@Override
+	public List<ProductBean> getAllProductsByOrder(String sortOption) {
+		List<ProductBean> products = new ArrayList<ProductBean>();
 
+		Connection con = DBUtil.provideConnection();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			if(sortOption.equals("lowToHigh"))
+			{
+				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by pprice asc");
+			}else if(sortOption.equals("highToLow"))
+			{
+				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by pprice desc");
+			} 
+			
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				ProductBean product = new ProductBean();
+
+				product.setProdId(rs.getString(1));
+				product.setProdName(rs.getString(2));
+				product.setProdType(rs.getString(3));
+				product.setProdInfo(rs.getString(4));
+				product.setProdPrice(rs.getDouble(5));
+				product.setProdQuantity(rs.getInt(6));
+				product.setProdImage(rs.getAsciiStream(7));
+
+				products.add(product);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		DBUtil.closeConnection(con);
+		DBUtil.closeConnection(ps);
+		DBUtil.closeConnection(rs);
+
+		return products;
+	}
+	@Override
+	public List<ProductBean> getAllProductsByRange(String start,String end) {
+		List<ProductBean> products = new ArrayList<ProductBean>();
+
+		Connection con = DBUtil.provideConnection();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = con.prepareStatement("SELECT * FROM product where pprice between ? AND ? order by pprice ");
+			ps.setString(1, start);
+			ps.setString(2, end);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				ProductBean product = new ProductBean();
+
+				product.setProdId(rs.getString(1));
+				product.setProdName(rs.getString(2));
+				product.setProdType(rs.getString(3));
+				product.setProdInfo(rs.getString(4));
+				product.setProdPrice(rs.getDouble(5));
+				product.setProdQuantity(rs.getInt(6));
+				product.setProdImage(rs.getAsciiStream(7));
+
+				products.add(product);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		DBUtil.closeConnection(con);
+		DBUtil.closeConnection(ps);
+		DBUtil.closeConnection(rs);
+
+		return products;
+	}
 	@Override
 	public List<ProductBean> searchAllProducts(String search) {
 		List<ProductBean> products = new ArrayList<ProductBean>();
