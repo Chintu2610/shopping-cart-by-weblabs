@@ -1,6 +1,7 @@
 package com.shashi.paymentphonepay;
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -9,7 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.shashi.service.impl.ProfileDAO;
+import com.shashi.srv.BookingMail_user;
 import com.shashi.utility.DBUtil;
+
 @WebServlet("/Phonepe_redirect")
 public class Phonepe_redirect extends HttpServlet {
 
@@ -46,10 +51,11 @@ public class Phonepe_redirect extends HttpServlet {
             // Close the PreparedStatement and database connection
             ps.close();
             con.close();
-            
+            String email = ProfileDAO.getUserIDByUsername(userName);
             // Print success message
             System.out.println("Payment data saved successfully.");
-            
+            BookingMail_user.sendLinkEmail(userName,email, orderId, amount);
+           	request.getSession().setAttribute("email", email);
             //response.sendRedirect("OrderServlet");
             response.sendRedirect("OrderServlet?amount=" + amount);
             
