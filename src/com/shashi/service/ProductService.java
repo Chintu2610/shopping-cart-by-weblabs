@@ -40,4 +40,6 @@ public interface ProductService {
 	List<ProductBean> getAllProductsByRange(String start, String end);
 
 	List<ProductBean> getAllProductsByOrder(String type);
+
+	List<ProductBean> getMostSaledProducts();
 }

@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("insert into product values(?,?,?,?,?,?,?);");
+			ps = con.prepareStatement("insert into product values(?,?,?,?,?,?,?,NOW(),0)");
 			ps.setString(1, product.getProdId());
 			ps.setString(2, product.getProdName());
 			ps.setString(3, product.getProdType());
@@ -223,7 +223,46 @@ public class ProductServiceImpl implements ProductService {
 
 		return products;
 	}
+	@Override
+	public List<ProductBean> getMostSaledProducts() {
+		List<ProductBean> products = new ArrayList<ProductBean>();
 
+		Connection con = DBUtil.provideConnection();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = con.prepareStatement("select * from product order by saleCount desc limit 5");
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				ProductBean product = new ProductBean();
+
+				product.setProdId(rs.getString(1));
+				product.setProdName(rs.getString(2));
+				product.setProdType(rs.getString(3));
+				product.setProdInfo(rs.getString(4));
+				product.setProdPrice(rs.getDouble(5));
+				product.setProdQuantity(rs.getInt(6));
+				product.setProdImage(rs.getAsciiStream(7));
+
+				products.add(product);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		DBUtil.closeConnection(con);
+		DBUtil.closeConnection(ps);
+		DBUtil.closeConnection(rs);
+
+		return products;
+	}
 	@Override
 	public List<ProductBean> getAllProductsByType(String type) {
 		List<ProductBean> products = new ArrayList<ProductBean>();
@@ -280,10 +319,16 @@ public class ProductServiceImpl implements ProductService {
 			}else if(sortOption.equals("highToLow"))
 			{
 				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by pprice desc");
-			} 
+			} else if(sortOption.equals("avgCustomerReview"))
+			{
+				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by customerReview");
+			} else if(sortOption.equals("newestArrivals"))
+			{
+				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by newestArrivals");
+			}
 			
 			rs = ps.executeQuery();
-
+			
 			while (rs.next()) {
 
 				ProductBean product = new ProductBean();

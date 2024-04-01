@@ -297,5 +297,34 @@ public class OrderServiceImpl implements OrderService {
 
 		return status;
 	}
+	@Override
+	public String DeliverNow(String orderId, String prodId) {
+		String status = "FAILURE";
 
+		Connection con = DBUtil.provideConnection();
+
+		PreparedStatement ps = null;
+
+		try {
+			ps = con.prepareStatement("update orders set status='delivered' where orderid=? and prodid=?");
+
+			ps.setString(1, orderId);
+			ps.setString(2, prodId);
+
+			int k = ps.executeUpdate();
+
+			if (k > 0) {
+				status = "Order Has been delivered successfully!!";
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBUtil.closeConnection(con);
+		DBUtil.closeConnection(ps);
+
+		return status;
+	}
 }
