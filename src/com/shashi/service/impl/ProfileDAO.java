@@ -57,5 +57,37 @@ public class ProfileDAO {
 	        return false;
 	    }
 	}
+	public static String getUserIDByUsername(String username) {
+	    String userID = null;
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
 
+	    try {
+	        connection = DBUtil.provideConnection();
+	        String query = "SELECT name FROM user WHERE email = ?";
+	        preparedStatement = connection.prepareStatement(query);
+	        preparedStatement.setString(1, username);
+	        resultSet = preparedStatement.executeQuery();
+
+	        if (resultSet.next()) {
+	            userID = resultSet.getString("name");
+	        }
+	    } catch (SQLException e) {
+	        // Handle exceptions or log them properly
+	        e.printStackTrace();
+	    } finally {
+	        // Close database resources
+	        try {
+	            if (resultSet != null) resultSet.close();
+	            if (preparedStatement != null) preparedStatement.close();
+	            if (connection != null) connection.close();
+	        } catch (Exception e) {
+	            // Handle exceptions
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return userID;
+	}
 }
