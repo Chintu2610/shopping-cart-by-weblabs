@@ -370,7 +370,7 @@ public class CartServiceImpl implements CartService {
 
 		try {
 			ps = con.prepareStatement("select quantity from usercart where username=? and prodid=?");
-
+		//	ps = con.prepareStatement("select usercart.quantity,review.rating,review.comments from usercart LEFT JOIN review ON usercart.prodid = review.pid where usercart.username=? and usercart.prodid=?");
 			ps.setString(1, userId);
 			ps.setString(2, itemId);
 

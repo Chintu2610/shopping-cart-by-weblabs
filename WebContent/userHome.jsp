@@ -15,6 +15,70 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	
+    <script>
+     function generateStarRating(averageRating, containerId) {
+            console.log("Average Rating: " + averageRating);
+            var starRatingContainer = document.getElementById(containerId);
+            starRatingContainer.innerHTML = ""; // Clear any existing stars
+
+            var totalStars = 5;
+            var fullStars = Math.floor(averageRating); // Number of full stars
+            var remainder = averageRating - fullStars; // Fractional part for half star
+
+            // Add full stars
+            for (var i = 0; i < fullStars; i++) {
+                starRatingContainer.innerHTML += '<span class="fa fa-star checked"></span>';
+            }
+
+            // Add half star if needed
+            if (remainder >= 0.25 && remainder <= 0.75) {
+                starRatingContainer.innerHTML += '<span class="fa fa-star-half checked"></span>';
+                fullStars++; // Increment fullStars to maintain the total count
+            }
+
+            // Add empty stars to fill up the remaining space
+            for (var i = fullStars; i < totalStars; i++) {
+                starRatingContainer.innerHTML += '<span class="fa fa-star"></span>';
+            }
+        }
+     
+    </script>
+    
+    
+
+     <style>
+    .star-rating {
+        font-size: 24px; /* Adjust the font size as needed */
+    }
+
+    .fa-star {
+        color: #ccc; /* Color of empty star */
+    }
+
+    .checked {
+        color: gold; /* Color of filled star */
+    }
+</style> 
+<!-- <script>  
+    // Function to fetch user count using AJAX
+    function fetchUserCount(userRatingcount, productId) {
+    	console.log("userRatingcount: " + userRatingcount+"pid"+productId);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        	debugger;
+            if (this.readyState == 4 && this.status == 200) {
+            	
+                var userCountElement = document.getElementById('userCount_' + productId);
+                userCountElement.innerHTML = 'User Count: ' + this.responseText;
+            }
+        };
+     /*    xhttp.open("GET", "getUserCount?productId=" + productId, true);
+        xhttp.send(); */
+    }
+</script> -->
+    
 </head>
 <body style="background-color: #ffd77c4f;">
 
@@ -110,8 +174,8 @@
                     <select class="form-control" id="sortOptions" name="sortOptions">
                         <option value="lowToHigh">Price: Low to High</option>
                         <option value="highToLow">Price: High to Low</option>
-                         <option value="avgCustomerReview">Avg. Customer Review</option>
-                         <option value="newestArrivals">Newest Arrivals</option>
+                        <!-- <option value="avgCustomerReview">Avg. Customer Review</option>
+                        <option value="newestArrivals">Newest Arrivals</option> -->
                     </select>
                     <button id="sortButton" class="btn btn-primary">Sort</button>
                     </form>
@@ -121,7 +185,9 @@
         </div>
     </div>
 </div>
- 
+
+
+   
  
   <script>
        
@@ -155,8 +221,11 @@
 		<div class="row text-center">
 
 			<%
+			int  userRatingcount =0;
 			for (ProductBean product : products) {
 				int cartQty = new CartServiceImpl().getCartItemCount(userName, product.getProdId());
+				  double averageRating = RatingDAO.getAverageRatingByProductId(product.getProdId());
+				    userRatingcount = RatingDAO.getUserCountByEmail(product.getProdId());
 			%>
 			<div class="col-sm-4" style='height: 350px;'>
 				<div class="thumbnail">
@@ -174,6 +243,30 @@
 						Rs
 						<%=product.getProdPrice()%>
 					</p>
+					
+					
+
+  <span class="star-rating" id="starRating_<%=product.getProdId()%>"></span>&nbsp;&nbsp;(<span><%=userRatingcount%></span>)
+  
+<div id="userCount_<%=product.getProdId()%>"></div>
+ <%-- <div id="userCount_<%=product.getProdId()%>"></div> --%>
+ 
+                <script>
+                    generateStarRating(<%= averageRating %>, 'starRating_<%=product.getProdId()%>');
+                    
+                  <%--   fetchUserCount(<%= userRatingcount %>, 'userCount_<%= product.getProdId() %>'); --%>
+                </script> 
+
+
+
+
+
+
+
+
+
+
+
 					<form method="post">
 						<%
 						if (cartQty == 0) {
@@ -184,9 +277,13 @@
 						&nbsp;&nbsp;&nbsp;
 						<button type="submit"
 							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
-							class="btn btn-primary">Buy Now</button>
-						<%
-						} else {
+							class="btn btn-primary">Buy Now</button>&nbsp;&nbsp;&nbsp;
+
+                         <button type="submit"
+							formaction="add_review.jsp?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							style="background-color: orange;" class="btn btn-primary">Add Review</button>
+							<%-- <h1><%=userRatingcount %></h1><br> --%>
+						<%} else {
 						%>
 						<button type="submit"
 							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"
@@ -197,6 +294,7 @@
 						<%
 						}
 						%>
+						
 					</form>
 					<br />
 				</div>
@@ -207,80 +305,6 @@
 			%>
 
 		</div>
-		 <div class="full-row">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="text-secondary double-down-line text-center mb-4">Most Sale Products</h2>
-                    </div>
-                   
-                              <div class="content container-fluid">
-               
-                         
-                	
-                <!-- End previous row and start a new row -->
-               <div class="row text-center">
-
-			<%
-			ProductServiceImpl prodDao1 = new ProductServiceImpl();
-			List<ProductBean> products1=prodDao1.getMostSaledProducts();
-			for (ProductBean product : products1) {
-				int cartQty = new CartServiceImpl().getCartItemCount(userName, product.getProdId());
-			%>
-			<div class="col-sm-4" style='height: 350px;'>
-				<div class="thumbnail">
-					<img src="./ShowImage?pid=<%=product.getProdId()%>" alt="Product"
-						style="height: 150px; max-width: 180px">
-					<p class="productname"><%=product.getProdName()%>
-					</p>
-					<%
-					String description = product.getProdInfo();
-					description = description.substring(0, Math.min(description.length(), 100));
-					%>
-					<p class="productinfo"><%=description%>..
-					</p>
-					<p class="price">
-						Rs
-						<%=product.getProdPrice()%>
-					</p>
-					<form method="post">
-						<%
-						if (cartQty == 0) {
-						%>
-						<button type="submit"
-							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
-							class="btn btn-success">Add to Cart</button>
-						&nbsp;&nbsp;&nbsp;
-						<button type="submit"
-							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
-							class="btn btn-primary">Buy Now</button>
-						<%
-						} else {
-						%>
-						<button type="submit"
-							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"
-							class="btn btn-danger">Remove From Cart</button>
-						&nbsp;&nbsp;&nbsp;
-						<button type="submit" formaction="cartDetails.jsp"
-							class="btn btn-success">Checkout</button>
-						<%
-						}
-						%>
-					</form>
-					<br />
-				</div>
-			</div>
-
-			<%
-			}
-			%>
-
-		</div>
-                <!-- end row-->
-            </div>
-                </div>
-            </div>
-        </div>
 	</div>
 	<!-- ENd of Product Items List -->
 
