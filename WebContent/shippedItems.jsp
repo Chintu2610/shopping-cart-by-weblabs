@@ -51,6 +51,7 @@
 						<th>Quantity</th>
 						<th>Amount</th>
 						<td>Status</td>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody style="background-color: white;">
@@ -80,7 +81,9 @@
 						<td><%=quantity%></td>
 						<td>Rs. <%=order.getAmount()%></td>
 						<td class="text-success" style="font-weight: bold;">SHIPPED</td>
-
+						<td><a
+							href="DeliveryServlet?orderid=<%=order.getTransactionId()%>&amount=<%=order.getAmount()%>&userid=<%=userId%>&prodid=<%=order.getProductId()%>"
+							class="btn btn-success">DELIVER NOW</a></td>
 					</tr>
 
 					<%

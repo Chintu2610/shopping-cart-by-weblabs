@@ -23,4 +23,6 @@ public interface OrderService {
 	public List<OrderDetails> getAllOrderDetails(String userEmailId);
 
 	public String shipNow(String orderId, String prodId);
+
+	String DeliverNow(String orderId, String prodId);
 }
