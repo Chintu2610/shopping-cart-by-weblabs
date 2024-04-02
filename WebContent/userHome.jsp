@@ -225,8 +225,11 @@
 						<button type="submit"
 							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
 							class="btn btn-primary">Buy Now</button>
-						<%
-						} else {
+
+                         <button type="submit"
+							formaction="add_review.jsp?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							style="background-color: orange;" class="btn btn-primary">Add Review</button>
+						<%} else {
 						%>
 						<button type="submit"
 							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"

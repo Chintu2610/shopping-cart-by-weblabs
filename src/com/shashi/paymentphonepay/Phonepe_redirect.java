@@ -31,20 +31,21 @@ public class Phonepe_redirect extends HttpServlet {
         String amount = String.valueOf(amount2);
         String userName = request.getParameter("userName");
         String orderId = request.getParameter("orderId");
+        String addressID = request.getParameter("addressID");
 
         try {
             // Create database connection
             Connection con = DBUtil.provideConnection();
             
             // Prepare SQL statement to insert payment data
-            String insertQuery = "INSERT INTO payments (userName, orderid, amount) VALUES (?, ?, ?)";
+            String insertQuery = "INSERT INTO payments (userName, orderid, amount,addressID) VALUES (?, ?, ?,?)";
             PreparedStatement ps = con.prepareStatement(insertQuery);
             
             // Set values for the parameters
             ps.setString(1, userName);
             ps.setString(2, orderId);
             ps.setString(3, amount);
-            
+            ps.setString(4, addressID);
             // Execute the SQL statement
             ps.executeUpdate();
             

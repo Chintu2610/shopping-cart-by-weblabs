@@ -41,7 +41,7 @@ public class merchant_payment extends HttpServlet {
 		String protocol = "http";
 		String host = "localhost:8080";
 		String amount = null;
-		
+		String addressID = request.getParameter("addressID");
 	//	int userId = 1;
 		String orderId = null;
 		String callbackUrl = protocol + "://" + host + "/shopping-cart/Payresponse";
@@ -52,11 +52,11 @@ public class merchant_payment extends HttpServlet {
 		double amountDouble = Double.parseDouble(am);
 		int amou = (int) Math.round(amountDouble);
 		amou = amou*100;
-		amount = String.valueOf(amou);
+ 	  amount = String.valueOf(amou);
 		//userId = request.getParameter("1");
 
 		String redirectUrl = protocol + "://" + host + "/shopping-cart/Phonepe_redirect?amount=" + amount + "&userName=" + userName  
-				+ "&orderId=" + orderId;
+				+ "&orderId=" + orderId + "&addressID=" + addressID;
 		Map<String, Object> payloadMap = new LinkedHashMap<>();
 		payloadMap.put("merchantId", merchantId);
 		payloadMap.put("merchantTransactionId", orderId);
