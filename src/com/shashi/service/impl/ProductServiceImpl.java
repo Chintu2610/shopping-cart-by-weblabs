@@ -11,8 +11,6 @@ import java.util.List;
 import com.shashi.beans.DemandBean;
 import com.shashi.beans.ProductBean;
 import com.shashi.service.ProductService;
-import com.shashi.srv.EmailDao;
-import com.shashi.srv.UpdateProductMail;
 import com.shashi.utility.DBUtil;
 import com.shashi.utility.IDUtil;
 import com.shashi.utility.MailMessage;
@@ -44,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("INSERT INTO product (pid, pname, ptype, pinfo, pprice, pquantity, image) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			ps = con.prepareStatement("insert into product values(?,?,?,?,?,?,?,NOW(),0)");
 			ps.setString(1, product.getProdId());
 			ps.setString(2, product.getProdName());
 			ps.setString(3, product.getProdType());
@@ -56,15 +54,9 @@ public class ProductServiceImpl implements ProductService {
 			int k = ps.executeUpdate();
 
 			if (k > 0) {
-				
-				String[] email =  EmailDao.getAllEmails() ;
-				
-				for (String emails : email) {
-		            UpdateProductMail.sendLinkEmail(emails);
-		        }
+
 				status = "Product Added Successfully with Product Id: " + product.getProdId();
 
-			
 			} else {
 
 				status = "Product Updation Failed!";
@@ -231,7 +223,46 @@ public class ProductServiceImpl implements ProductService {
 
 		return products;
 	}
+	@Override
+	public List<ProductBean> getMostSaledProducts() {
+		List<ProductBean> products = new ArrayList<ProductBean>();
 
+		Connection con = DBUtil.provideConnection();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = con.prepareStatement("select * from product order by saleCount desc limit 5");
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				ProductBean product = new ProductBean();
+
+				product.setProdId(rs.getString(1));
+				product.setProdName(rs.getString(2));
+				product.setProdType(rs.getString(3));
+				product.setProdInfo(rs.getString(4));
+				product.setProdPrice(rs.getDouble(5));
+				product.setProdQuantity(rs.getInt(6));
+				product.setProdImage(rs.getAsciiStream(7));
+
+				products.add(product);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		DBUtil.closeConnection(con);
+		DBUtil.closeConnection(ps);
+		DBUtil.closeConnection(rs);
+
+		return products;
+	}
 	@Override
 	public List<ProductBean> getAllProductsByType(String type) {
 		List<ProductBean> products = new ArrayList<ProductBean>();
@@ -242,7 +273,7 @@ public class ProductServiceImpl implements ProductService {
 		ResultSet rs = null;
 
 		try {
-			ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product where lower(ptype) like ?;");
+			ps = con.prepareStatement("SELECT * FROM shopping-cart.product where lower(ptype) like ?;");
 			ps.setString(1, "%" + type + "%");
 			rs = ps.executeQuery();
 
@@ -284,14 +315,20 @@ public class ProductServiceImpl implements ProductService {
 		try {
 			if(sortOption.equals("lowToHigh"))
 			{
-				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by pprice asc");
+				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by pprice asc");
 			}else if(sortOption.equals("highToLow"))
 			{
-				ps = con.prepareStatement("SELECT * FROM `shopping-cart`.product order by pprice desc");
-			} 
+				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by pprice desc");
+			} else if(sortOption.equals("avgCustomerReview"))
+			{
+				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by customerReview");
+			} else if(sortOption.equals("newestArrivals"))
+			{
+				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by newestArrivals");
+			}
 			
 			rs = ps.executeQuery();
-
+			
 			while (rs.next()) {
 
 				ProductBean product = new ProductBean();
@@ -370,7 +407,7 @@ public class ProductServiceImpl implements ProductService {
 
 		try {
 			ps = con.prepareStatement(
-					"SELECT * FROM `shopping-cart`.product where lower(ptype) like ? or lower(pname) like ? or lower(pinfo) like ?");
+					"SELECT * FROM shopping-cart.product where lower(ptype) like ? or lower(pname) like ? or lower(pinfo) like ?");
 			search = "%" + search + "%";
 			ps.setString(1, search);
 			ps.setString(2, search);

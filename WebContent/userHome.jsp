@@ -110,8 +110,8 @@
                     <select class="form-control" id="sortOptions" name="sortOptions">
                         <option value="lowToHigh">Price: Low to High</option>
                         <option value="highToLow">Price: High to Low</option>
-                        <!-- <option value="avgCustomerReview">Avg. Customer Review</option>
-                        <option value="newestArrivals">Newest Arrivals</option> -->
+                         <option value="avgCustomerReview">Avg. Customer Review</option>
+                         <option value="newestArrivals">Newest Arrivals</option>
                     </select>
                     <button id="sortButton" class="btn btn-primary">Sort</button>
                     </form>
@@ -121,46 +121,6 @@
         </div>
     </div>
 </div>
-
-
-    <!-- End of Price Range Filter -->
- 
-   <!-- <script>
-        $(document).ready(function() {
-            $('#priceFilterForm').submit(function(event) {
-                // Get the values of minPrice and maxPrice
-                var minPrice = parseFloat($('#minPrice').val());
-                var maxPrice = parseFloat($('#maxPrice').val());
-
-                // Check if minPrice is greater than maxPrice
-                if (minPrice > maxPrice) {
-                    // Show alert message
-                    alert("Minimum price cannot be greater than maximum price!");
-                    // Prevent form submission
-                    event.preventDefault();
-                }
-            });
-
-            $('#sortButton').click(function() {
-                var sortOption = $('#sortOptions').val();
-                // Send an AJAX request to the server to fetch data based on the selected sorting option
-                $.ajax({
-                    type: 'GET',
-                    url: 'sortDataServlet',
-                    data: {
-                        sortOption: sortOption
-                    },
-                    success: function(response) {
-                        // Update the product list with the sorted data
-                        $('#productList').html(response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script> -->
  
  
   <script>
@@ -225,11 +185,8 @@
 						<button type="submit"
 							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
 							class="btn btn-primary">Buy Now</button>
-
-                         <button type="submit"
-							formaction="add_review.jsp?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
-							style="background-color: orange;" class="btn btn-primary">Add Review</button>
-						<%} else {
+						<%
+						} else {
 						%>
 						<button type="submit"
 							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"
@@ -250,6 +207,80 @@
 			%>
 
 		</div>
+		 <div class="full-row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-secondary double-down-line text-center mb-4">Most Sale Products</h2>
+                    </div>
+                   
+                              <div class="content container-fluid">
+               
+                         
+                	
+                <!-- End previous row and start a new row -->
+               <div class="row text-center">
+
+			<%
+			ProductServiceImpl prodDao1 = new ProductServiceImpl();
+			List<ProductBean> products1=prodDao1.getMostSaledProducts();
+			for (ProductBean product : products1) {
+				int cartQty = new CartServiceImpl().getCartItemCount(userName, product.getProdId());
+			%>
+			<div class="col-sm-4" style='height: 350px;'>
+				<div class="thumbnail">
+					<img src="./ShowImage?pid=<%=product.getProdId()%>" alt="Product"
+						style="height: 150px; max-width: 180px">
+					<p class="productname"><%=product.getProdName()%>
+					</p>
+					<%
+					String description = product.getProdInfo();
+					description = description.substring(0, Math.min(description.length(), 100));
+					%>
+					<p class="productinfo"><%=description%>..
+					</p>
+					<p class="price">
+						Rs
+						<%=product.getProdPrice()%>
+					</p>
+					<form method="post">
+						<%
+						if (cartQty == 0) {
+						%>
+						<button type="submit"
+							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							class="btn btn-success">Add to Cart</button>
+						&nbsp;&nbsp;&nbsp;
+						<button type="submit"
+							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							class="btn btn-primary">Buy Now</button>
+						<%
+						} else {
+						%>
+						<button type="submit"
+							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"
+							class="btn btn-danger">Remove From Cart</button>
+						&nbsp;&nbsp;&nbsp;
+						<button type="submit" formaction="cartDetails.jsp"
+							class="btn btn-success">Checkout</button>
+						<%
+						}
+						%>
+					</form>
+					<br />
+				</div>
+			</div>
+
+			<%
+			}
+			%>
+
+		</div>
+                <!-- end row-->
+            </div>
+                </div>
+            </div>
+        </div>
 	</div>
 	<!-- ENd of Product Items List -->
 

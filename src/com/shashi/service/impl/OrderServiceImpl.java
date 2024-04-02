@@ -62,13 +62,9 @@ public class OrderServiceImpl implements OrderService {
 			ordered = new OrderServiceImpl().addTransaction(transaction);
 			if (ordered) {
 
-				/*
-				 * MailMessage.transactionSuccess(userName, new
-				 * UserServiceImpl().getFName(userName), transaction.getTransactionId(),
-				 * transaction.getTransAmount());
-				 */
+				MailMessage.transactionSuccess(userName, new UserServiceImpl().getFName(userName),
+						transaction.getTransactionId(), transaction.getTransAmount());
 
-				
 				status = "Order Placed Successfully!";
 			}
 		}
@@ -85,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("insert into orders(orderid, prodid, quantity, amount, shipped) values(?,?,?,?,?)");
+			ps = con.prepareStatement("insert into orders values(?,?,?,?,?)");
 
 			ps.setString(1, order.getTransactionId());
 			ps.setString(2, order.getProductId());
@@ -301,5 +297,34 @@ public class OrderServiceImpl implements OrderService {
 
 		return status;
 	}
+	@Override
+	public String DeliverNow(String orderId, String prodId) {
+		String status = "FAILURE";
 
+		Connection con = DBUtil.provideConnection();
+
+		PreparedStatement ps = null;
+
+		try {
+			ps = con.prepareStatement("update orders set status='delivered' where orderid=? and prodid=?");
+
+			ps.setString(1, orderId);
+			ps.setString(2, prodId);
+
+			int k = ps.executeUpdate();
+
+			if (k > 0) {
+				status = "Order Has been delivered successfully!!";
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBUtil.closeConnection(con);
+		DBUtil.closeConnection(ps);
+
+		return status;
+	}
 }
