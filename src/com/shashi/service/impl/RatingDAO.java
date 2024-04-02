@@ -72,8 +72,9 @@ import com.shashi.utility.DBUtil;
 	            conn = DBUtil.provideConnection(); // Replace with your database connection method
 	            
 	            // SQL query to retrieve count of distinct users who rated the product by product ID
-	            String sql = "SELECT COUNT(DISTINCT email) AS user_count FROM review WHERE pid = ?";
-	            
+	          //  String sql = "SELECT COUNT(DISTINCT email) AS user_count FROM review WHERE pid = ?";
+	            String sql = "SELECT AVG(subquery.rating) AS average_rating FROM (SELECT DISTINCT email, rating FROM review WHERE pid = ?) AS subquery";
+
 	            // Prepare the statement
 	            stmt = conn.prepareStatement(sql);
 	            stmt.setString(1, productId);
@@ -83,10 +84,10 @@ import com.shashi.utility.DBUtil;
 	            
 	            // Check if there is a result
 	            if (rs.next()) {
-	                userCount = rs.getInt("user_count"); // Get the user count from the result set
+	                userCount = rs.getInt("user_count"); 
 	            }
 	        } catch (SQLException e) {
-	            e.printStackTrace(); // Handle the exception as per your application's requirement
+	            e.printStackTrace(); 
 	        } finally {
 	            // Close the resources
 	            try {
@@ -100,11 +101,11 @@ import com.shashi.utility.DBUtil;
 	                    conn.close();
 	                }
 	            } catch (SQLException e) {
-	                e.printStackTrace(); // Handle the exception as per your application's requirement
+	                e.printStackTrace(); 
 	            }
 	        }
 	        
-	        return userCount; // Return the user count
+	        return userCount; 
 	    }
 
 	}

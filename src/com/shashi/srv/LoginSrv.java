@@ -23,15 +23,21 @@ public class LoginSrv extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		String usertype = null;
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
-		String userType = request.getParameter("usertype");
+		if (userName.equals("admin@gmail.com" )) {
+			usertype="admin";
+		}else {
+			usertype = "customer";
+		}
+		
+		
 		response.setContentType("text/html");
 
 		String status = "Login Denied! Invalid Username or password.";
 
-		if (userType.equals("admin")) { // Login as Admin
+		if (usertype.equals("admin")) { // Login as Admin
 
 			if (password.equals("admin") && userName.equals("admin@gmail.com")) {
 				// valid
@@ -42,7 +48,7 @@ public class LoginSrv extends HttpServlet {
 
 				session.setAttribute("username", userName);
 				session.setAttribute("password", password);
-				session.setAttribute("usertype", userType);
+				session.setAttribute("usertype", usertype);
 
 				rd.forward(request, response);
 
@@ -69,7 +75,7 @@ public class LoginSrv extends HttpServlet {
 
 				session.setAttribute("username", userName);
 				session.setAttribute("password", password);
-				session.setAttribute("usertype", userType);
+				session.setAttribute("usertype", usertype);
 
 				RequestDispatcher rd = request.getRequestDispatcher("userHome.jsp");
 

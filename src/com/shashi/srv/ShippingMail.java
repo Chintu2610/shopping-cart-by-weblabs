@@ -30,7 +30,7 @@ public class ShippingMail {
 		String subject = "Trade System Registration Program.";
 		
 		
-		String body = "  Hey    We are glad that you shop with Ellison Electronics!\n" 
+		String body = "  Hey    We are glad that you shop with Weblabs Electronics!\n" 
 				+ "\n\n Your order has been shipped successfully and on the way to be delivered.\n"
 				+ "Please Note that this is a demo projet Email and you have not made any real transaction with us till now!"
 				+ " \n  Here is Your Transaction Details:"

@@ -28,7 +28,7 @@ public class AddRatingSrv extends HttpServlet {
         RatingServiceImpl add = new RatingServiceImpl();
         status1 = add.addV( rating, email, pid,comments);
 
-        RequestDispatcher rd = request.getRequestDispatcher("add_review.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("userHome.jsp");
         rd.forward(request, response);
     }
 
