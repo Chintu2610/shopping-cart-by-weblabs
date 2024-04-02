@@ -12,7 +12,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class BookingMail_user {
+public class UpdateProductMail {
 
 	private static final String FROM_EMAIL;
     private static final String FROM_PASSWORD;
@@ -24,16 +24,23 @@ public class BookingMail_user {
         FROM_PASSWORD = rb.getString("mailer.password");
     }
 	
-	public static void sendLinkEmail(String toEmail,String username, String orderId,String amount) {
+	public static void sendLinkEmail(String toEmail) {
 		/* String otp = generateOTP(toEmail); */
-		String subject = "Shopping Cart Registration Program.";
+		String subject = "Shooping Cart System New Products Notification.";
+		
+		String username = EmailDao.getAllusername(toEmail);
+		
 		String body = "Hi " + username + "\n" +
-	              "Thank you for choosing our Shopping Cart Service! We are pleased to confirm your booking and provide you with the details below:\n" +
-	              "Order ID: " + orderId + "\n" +
-	              "Amount Paid: " + amount + "\n\n" +
-	              "We appreciate your trust in us and look forward to serving you. Should you have any questions or need further assistance, please feel free to reach out to us.\n\n" +
-	              "Thank you again for your booking!\n\n" +
-	              "Best regards,\n";
+	              "Welcome to Shopping Cart Service! We are thrilled to have you on board and thank you for choosing us for your shopping needs.:\n" +
+			    "New products are out come and check the newly trending products in our website."+
+				 "Thank you again for choosing Shooping-Cart. We look forward to serving you and exceeding your expectations!\r\n"
+				 + "\r\n"
+				 + "Happy shopping!\r\n"
+				 + "\r\n"
+				 + "Best regards,\n"
+				+ "items, tech gadgets, home essentials, or gifts for loved ones, we've got you covered.\r\n"
+				+ "\r\n";
+				
 
 		sendEmail(toEmail, subject, body);
 		return ;

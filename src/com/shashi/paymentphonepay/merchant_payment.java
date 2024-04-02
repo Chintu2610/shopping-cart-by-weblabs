@@ -39,7 +39,7 @@ public class merchant_payment extends HttpServlet {
 		String merchantKey = "b65db1d1-3fdb-4a5c-82bd-a51b1bf478ae";
 		String apiUrl = "https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay";
 		String protocol = "http";
-		String host = "localhost:8081";
+		String host = "localhost:8080";
 		String amount = null;
 		String addressID = request.getParameter("addressID");
 	//	int userId = 1;

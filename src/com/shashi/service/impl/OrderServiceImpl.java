@@ -62,9 +62,13 @@ public class OrderServiceImpl implements OrderService {
 			ordered = new OrderServiceImpl().addTransaction(transaction);
 			if (ordered) {
 
-				MailMessage.transactionSuccess(userName, new UserServiceImpl().getFName(userName),
-						transaction.getTransactionId(), transaction.getTransAmount());
+				/*
+				 * MailMessage.transactionSuccess(userName, new
+				 * UserServiceImpl().getFName(userName), transaction.getTransactionId(),
+				 * transaction.getTransAmount());
+				 */
 
+				
 				status = "Order Placed Successfully!";
 			}
 		}
@@ -81,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("insert into orders values(?,?,?,?,?)");
+			ps = con.prepareStatement("insert into orders(orderid, prodid, quantity, amount, shipped) values(?,?,?,?,?)");
 
 			ps.setString(1, order.getTransactionId());
 			ps.setString(2, order.getProductId());
