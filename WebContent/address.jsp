@@ -73,6 +73,7 @@ if (newRecordsPerPageParam != null) {
 <div class="text-center"
 		style="color: green; font-size: 24px; font-weight: bold;">Select
 		Address</div>
+		<a style="background-color: #115884;color:white; padding: 5px;border-radius: 8px;margin-left: 900px;" href="address_add.jsp"> <span>Add address</span></a><br><br>
 	<div class="container-fluid">
 		<div class="table-responsive ">
 			<table class="table table-hover table-sm">
