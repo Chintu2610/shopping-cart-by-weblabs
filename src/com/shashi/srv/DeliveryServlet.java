@@ -15,14 +15,12 @@ import com.shashi.service.impl.OrderServiceImpl;
 import com.shashi.service.impl.UserServiceImpl;
 import com.shashi.utility.MailMessage;
 
-/**
- * Servlet implementation class ShipmentServlet
- */
-@WebServlet("/ShipmentServlet")
-public class ShipmentServlet extends HttpServlet {
+
+@WebServlet("/DeliveryServlet")
+public class DeliveryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public ShipmentServlet() {
+	public DeliveryServlet() {
 		super();
 	}
 
@@ -41,13 +39,13 @@ public class ShipmentServlet extends HttpServlet {
 		String prodId = request.getParameter("prodid");
 		String userName = request.getParameter("userid");
 		Double amount = Double.parseDouble(request.getParameter("amount"));
-		String status = new OrderServiceImpl().shipNow(orderId, prodId);
+		String status = new OrderServiceImpl().DeliverNow(orderId, prodId);
 		String pagename = "shippedItems.jsp";
 		if ("FAILURE".equalsIgnoreCase(status)) {
 			pagename = "unshippedItems.jsp";
 		} else {
-			ShippingMail.sendLinkEmail(userName, orderId,amount);
-				}
+			MailMessage.orderDelivered(userName, new UserServiceImpl().getFName(userName), orderId, amount);
+		}
 		PrintWriter pw = response.getWriter();
 		response.setContentType("text/html");
 

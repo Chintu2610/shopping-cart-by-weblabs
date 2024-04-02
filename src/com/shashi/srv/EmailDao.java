@@ -5,11 +5,14 @@ import java.sql.Connection;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.shashi.utility.DBUtil;
 
@@ -171,5 +174,78 @@ public class EmailDao {
 
 		return false;
 	}
+
+	
+	public static String[] getAllEmails() {
+	    List<String> emailsList = new ArrayList<>();
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+
+	    try {
+	        connection = DBUtil.provideConnection();
+	        String query = "SELECT email FROM user LIMIT 0, 1000";
+	        preparedStatement = connection.prepareStatement(query);
+	       
+	        resultSet = preparedStatement.executeQuery();
+
+	        while (resultSet.next()) {
+	            String email = resultSet.getString("email");
+	            emailsList.add(email);
+	        }
+	    } catch (SQLException e) {
+	        // Handle exceptions or log them properly
+	        e.printStackTrace();
+	    } finally {
+	        // Close database resources
+	        try {
+	            if (resultSet != null) resultSet.close();
+	            if (preparedStatement != null) preparedStatement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            // Handle exceptions
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // Convert list to array
+	    return emailsList.toArray(new String[0]);
+	}
+
+
+	public static String getAllusername(String email) {
+	    String username = null;
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+
+	    try {
+	        connection = DBUtil.provideConnection();
+	        String query = "SELECT name FROM user WHERE email = ?";
+	        preparedStatement = connection.prepareStatement(query);
+	        preparedStatement.setString(1, email);
+	        resultSet = preparedStatement.executeQuery();
+
+	        if (resultSet.next()) {
+	        	username = resultSet.getString("name");
+	        }
+	    } catch (SQLException e) {
+	        // Handle exceptions or log them properly
+	        e.printStackTrace();
+	    } finally {
+	        // Close database resources
+	        try {
+	            if (resultSet != null) resultSet.close();
+	            if (preparedStatement != null) preparedStatement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            // Handle exceptions
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return username; // Return the email string
+	}
+
 
 }

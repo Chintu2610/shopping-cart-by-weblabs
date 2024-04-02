@@ -39,9 +39,9 @@ public class merchant_payment extends HttpServlet {
 		String merchantKey = "b65db1d1-3fdb-4a5c-82bd-a51b1bf478ae";
 		String apiUrl = "https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay";
 		String protocol = "http";
-		String host = "localhost:8081";
+		String host = "localhost:8080";
 		String amount = null;
-		String addressID = request.getParameter("addressID");
+		
 	//	int userId = 1;
 		String orderId = null;
 		String callbackUrl = protocol + "://" + host + "/shopping-cart/Payresponse";
@@ -52,11 +52,11 @@ public class merchant_payment extends HttpServlet {
 		double amountDouble = Double.parseDouble(am);
 		int amou = (int) Math.round(amountDouble);
 		amou = amou*100;
- 	  amount = String.valueOf(amou);
+		amount = String.valueOf(amou);
 		//userId = request.getParameter("1");
 
 		String redirectUrl = protocol + "://" + host + "/shopping-cart/Phonepe_redirect?amount=" + amount + "&userName=" + userName  
-				+ "&orderId=" + orderId + "&addressID=" + addressID;
+				+ "&orderId=" + orderId;
 		Map<String, Object> payloadMap = new LinkedHashMap<>();
 		payloadMap.put("merchantId", merchantId);
 		payloadMap.put("merchantTransactionId", orderId);

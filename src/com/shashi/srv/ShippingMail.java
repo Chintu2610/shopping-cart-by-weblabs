@@ -12,7 +12,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class BookingMail_user {
+public class ShippingMail {
+
 
 	private static final String FROM_EMAIL;
     private static final String FROM_PASSWORD;
@@ -24,16 +25,19 @@ public class BookingMail_user {
         FROM_PASSWORD = rb.getString("mailer.password");
     }
 	
-	public static void sendLinkEmail(String toEmail,String username, String orderId,String amount) {
+	public static void sendLinkEmail(String toEmail,String orderId,Double amount) {
 		/* String otp = generateOTP(toEmail); */
-		String subject = "Shopping Cart Registration Program.";
-		String body = "Hi " + username + "\n" +
-	              "Thank you for choosing our Shopping Cart Service! We are pleased to confirm your booking and provide you with the details below:\n" +
-	              "Order ID: " + orderId + "\n" +
-	              "Amount Paid: " + amount + "\n\n" +
-	              "We appreciate your trust in us and look forward to serving you. Should you have any questions or need further assistance, please feel free to reach out to us.\n\n" +
-	              "Thank you again for your booking!\n\n" +
-	              "Best regards,\n";
+		String subject = "Trade System Registration Program.";
+		
+		
+		String body = "  Hey    We are glad that you shop with Ellison Electronics!\n" 
+				+ "\n\n Your order has been shipped successfully and on the way to be delivered.\n"
+				+ "Please Note that this is a demo projet Email and you have not made any real transaction with us till now!"
+				+ " \n  Here is Your Transaction Details:"
+				+ " \n Order Id:"+ orderId + 
+				"\n Amount Paid:"+ amount + 
+				 "  \n\n    Thanks for shopping with us!"
+				+ "\n\n\n Shopping Cart.";
 
 		sendEmail(toEmail, subject, body);
 		return ;
