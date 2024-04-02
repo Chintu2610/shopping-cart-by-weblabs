@@ -54,7 +54,7 @@
 							id="last_name" required>
 					</div>
 				</div>
-				<div class="row">
+				<!-- <div class="row">
 					<div class="col-md-12 form-group">
 						<label for="userrole">Login As</label> <select name="usertype"
 							id="userrole" class="form-control" required>
@@ -62,7 +62,7 @@
 							<option value="admin">ADMIN</option>
 						</select>
 					</div>
-				</div>
+				</div> -->
 			<div class="row">
 					<div class="col-md-12 text-center">
 						<button type="submit" class="btn btn-success">Login</button>
