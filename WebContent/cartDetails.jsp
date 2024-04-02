@@ -176,8 +176,8 @@
 								formaction="payment.jsp?amount=<%=totAmount%>">Pay Now</button>
 						</form> --%>
 						<form method="post" action="merchant_payment">
-						<%-- <input type="text" name="userName" value="<%=userName%>"> --%>
-   							<%--  <input type="hidden" name="amount" value="<%=totAmount%>"> --%>
+						 <input type="hidden" name="userName" value="<%=userName%>">
+   							 <input type="hidden" name="amount" value="<%=totAmount%>">
    							 <button style="background-color: blue; color: white;">Pay Now</button>
 						</form>
 						</td> 

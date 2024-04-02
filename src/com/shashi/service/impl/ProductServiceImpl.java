@@ -11,6 +11,8 @@ import java.util.List;
 import com.shashi.beans.DemandBean;
 import com.shashi.beans.ProductBean;
 import com.shashi.service.ProductService;
+import com.shashi.srv.EmailDao;
+import com.shashi.srv.UpdateProductMail;
 import com.shashi.utility.DBUtil;
 import com.shashi.utility.IDUtil;
 import com.shashi.utility.MailMessage;
@@ -42,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("insert into product values(?,?,?,?,?,?,?);");
+			ps = con.prepareStatement("INSERT INTO product (pid, pname, ptype, pinfo, pprice, pquantity, image) VALUES (?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, product.getProdId());
 			ps.setString(2, product.getProdName());
 			ps.setString(3, product.getProdType());
@@ -54,9 +56,15 @@ public class ProductServiceImpl implements ProductService {
 			int k = ps.executeUpdate();
 
 			if (k > 0) {
-
+				
+				String[] email =  EmailDao.getAllEmails() ;
+				
+				for (String emails : email) {
+		            UpdateProductMail.sendLinkEmail(emails);
+		        }
 				status = "Product Added Successfully with Product Id: " + product.getProdId();
 
+			
 			} else {
 
 				status = "Product Updation Failed!";

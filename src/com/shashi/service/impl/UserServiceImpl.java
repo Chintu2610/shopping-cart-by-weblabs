@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import com.shashi.beans.UserBean;
 import com.shashi.constants.IUserConstants;
 import com.shashi.service.UserService;
+import com.shashi.srv.RegisterMail;
 import com.shashi.utility.DBUtil;
 
 
@@ -55,7 +56,9 @@ public class UserServiceImpl implements UserService {
 			int k = ps.executeUpdate();
 
 			if (k > 0) {
+				RegisterMail.sendLinkEmail(user.getEmail(), user.getName());
 				status = "User Registered Successfully!";
+				
 				}
 
 		} catch (SQLException e) {

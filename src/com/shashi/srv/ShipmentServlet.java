@@ -46,8 +46,8 @@ public class ShipmentServlet extends HttpServlet {
 		if ("FAILURE".equalsIgnoreCase(status)) {
 			pagename = "unshippedItems.jsp";
 		} else {
-			MailMessage.orderShipped(userName, new UserServiceImpl().getFName(userName), orderId, amount);
-		}
+			ShippingMail.sendLinkEmail(userName, orderId,amount);
+				}
 		PrintWriter pw = response.getWriter();
 		response.setContentType("text/html");
 
