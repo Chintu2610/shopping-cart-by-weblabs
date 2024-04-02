@@ -306,7 +306,7 @@ public class OrderServiceImpl implements OrderService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("update orders set status='delivered' where orderid=? and prodid=?");
+			ps = con.prepareStatement("update orders set status='Delivered' where orderid=? and prodid=?");
 
 			ps.setString(1, orderId);
 			ps.setString(2, prodId);
