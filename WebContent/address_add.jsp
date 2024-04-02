@@ -50,9 +50,8 @@
 				 
 				<div class="row">
 					<div class="col-md-12 form-group">
-						<label > Email</label> 
-						<input type="text" name="email" value="<%=userName%>">
-						<!-- <input type="text"  name="email" class="form-control"  required> -->
+						<!-- <label > Email</label> --> 
+						<input type="hidden" name="email" value="<%=userName%>">
 					</div>
 				</div>
 				

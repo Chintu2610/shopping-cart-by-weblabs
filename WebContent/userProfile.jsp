@@ -48,6 +48,7 @@
 						<li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
 						<li class="breadcrumb-item"><a href="userProfileEdit.jsp">Edit User
 								Profile</a></li>
+								<li class="breadcrumb-item"><a href="address.jsp">Your Addresses</a></li>
 					</ol>
 				</nav>
 			</div>
