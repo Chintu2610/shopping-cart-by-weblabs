@@ -54,6 +54,8 @@
 		message = "No items found for the search '" + (search != null ? search : type) + "'";
 		products = prodDao.getAllProducts();
 	}
+	String minPriceStr = request.getParameter("minPrice");
+    String maxPriceStr = request.getParameter("maxPrice");
 	%>
 
 
@@ -62,6 +64,74 @@
 
 	<div class="text-center"
 		style="color: black; font-size: 14px; font-weight: bold;"><%=message%></div>
+		
+		<div class="container" style="margin-bottom:20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form method="get" id="priceFilterForm" class="form-inline text-center" action="./filterProduct">
+                <div class="form-group">
+                    <label for="minPrice">Min Price:</label>
+                    <input type="text" class="form-control" id="minPrice" name="minPrice" placeholder="Min">
+                </div>
+                <div class="form-group">
+                    <label for="maxPrice">Max Price:</label>
+                    <input type="text" class="form-control" id="maxPrice" name="maxPrice" placeholder="Max" >
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+		
+<div class="container" style="margin-bottom:20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-inline text-center">
+                <div class="form-group">
+                <form method="get" id="priceFilterForm" class="form-inline text-center" action="./sortProductSrv">
+                <input type="hidden" id="minPriceStr" name="minPriceStr" value="<%= minPriceStr %>">
+    			<input type="hidden" id="maxPriceStr" name="maxPriceStr" value="<%= maxPriceStr %>">
+                    <label for="sortOptions">Sort By:</label>
+                    <select class="form-control" id="sortOptions" name="sortOptions">
+                        <option value="lowToHigh">Price: Low to High</option>
+                        <option value="highToLow">Price: High to Low</option>
+                         <option value="avgCustomerReview">Avg. Customer Review</option>
+                         <option value="newestArrivals">Newest Arrivals</option>
+                    </select>
+                    <button id="sortButton" class="btn btn-primary">Sort</button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>		
+	<script>
+       
+            $('#maxPrice').keypress(function (event) {
+                if (event.keyCode === 13) { // Enter key pressed
+                    event.preventDefault();
+                    applyPriceFilter();
+                }
+            });
+
+            function applyPriceFilter() {
+                var minPrice = parseFloat($('#minPrice').val());
+                var maxPrice = parseFloat($('#maxPrice').val());
+
+                if (minPrice > maxPrice) {
+                    alert("Minimum price cannot be greater than maximum price!");
+                    return;
+                }
+
+                $('#priceFilterForm').submit();
+            }
+            /* $('#sortOptions').change(function() {
+                $('#priceFilterForm').submit(); // Submit the form when selection changes
+            }); */
+        
+    </script>	
+		
 	<!-- Start of Product Items List -->
 	<div class="container" style="background-color: #fff;">
 		<div class="row text-center">

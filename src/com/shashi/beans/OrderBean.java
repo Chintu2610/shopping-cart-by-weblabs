@@ -10,9 +10,20 @@ public class OrderBean implements Serializable {
 	private int quantity;
 	private Double amount;
 	private int shipped;
-
+	private String status;
+	
 	public OrderBean() {
 		super();
+	}
+
+	public OrderBean(String transactionId, String productId, int quantity, Double amount, int shipped, String status) {
+		super();
+		this.transactionId = transactionId;
+		this.productId = productId;
+		this.quantity = quantity;
+		this.amount = amount;
+		this.shipped = shipped;
+		this.status = status;
 	}
 
 	public OrderBean(String transactionId, String productId, int quantity, Double amount) {
@@ -71,6 +82,14 @@ public class OrderBean implements Serializable {
 
 	public void setShipped(int shipped) {
 		this.shipped = shipped;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

@@ -181,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
 			while (rs.next()) {
 
 				OrderBean order = new OrderBean(rs.getString("orderid"), rs.getString("prodid"), rs.getInt("quantity"),
-						rs.getDouble("amount"), rs.getInt("shipped"));
+						rs.getDouble("amount"), rs.getInt("shipped"),rs.getString("status"));
 
 				orderList.add(order);
 
@@ -270,31 +270,55 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public String shipNow(String orderId, String prodId) {
 		String status = "FAILURE";
-
 		Connection con = DBUtil.provideConnection();
-
-		PreparedStatement ps = null;
+		PreparedStatement psOrders = null;
+		PreparedStatement psProduct = null;
 
 		try {
-			ps = con.prepareStatement("update orders set shipped=1 where orderid=? and prodid=? and shipped=0");
+		    con.setAutoCommit(false); // Start a transaction
+		    
+		    // Update orders table
+		    psOrders = con.prepareStatement("UPDATE orders SET shipped=1, status='SHIPPED' WHERE orderid=? AND prodid=?");
+		    psOrders.setString(1, orderId);
+		    psOrders.setString(2, prodId);
+		    int k1 = psOrders.executeUpdate();
 
-			ps.setString(1, orderId);
-			ps.setString(2, prodId);
+		    // Update product table
+		    if (k1 > 0) { // Only update product if the order update succeeds
+		        psProduct = con.prepareStatement("UPDATE product SET saleCount=saleCount+1 WHERE prodid=?");
+		        psProduct.setString(1, prodId);
+		        int k2 = psProduct.executeUpdate();
 
-			int k = ps.executeUpdate();
-
-			if (k > 0) {
-				status = "Order Has been shipped successfully!!";
-			}
-
+		        if (k2 > 0) {
+		            con.commit(); // Both updates succeeded, commit the transaction
+		            status = "Order has been shipped successfully!";
+		        } else {
+		            con.rollback(); // Rollback transaction if product update fails
+		        }
+		    } else {
+		        con.rollback(); // Rollback transaction if order update fails
+		    }
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    e.printStackTrace();
+		    try {
+		        con.rollback(); // Rollback transaction on exception
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    }
+		} finally {
+		    try {
+		        if (psOrders != null) {
+		            psOrders.close();
+		        }
+		        if (psProduct != null) {
+		            psProduct.close();
+		        }
+		        con.setAutoCommit(true); // Reset auto-commit mode
+		        con.close(); // Close connection
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    }
 		}
-
-		DBUtil.closeConnection(con);
-		DBUtil.closeConnection(ps);
-
 		return status;
 	}
 	@Override
@@ -306,7 +330,7 @@ public class OrderServiceImpl implements OrderService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("update orders set status='delivered' where orderid=? and prodid=?");
+			ps = con.prepareStatement("update orders set status='Delivered' where orderid=? and prodid=?");
 
 			ps.setString(1, orderId);
 			ps.setString(2, prodId);

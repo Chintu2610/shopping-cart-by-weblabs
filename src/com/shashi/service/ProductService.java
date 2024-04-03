@@ -39,7 +39,7 @@ public interface ProductService {
 
 	List<ProductBean> getAllProductsByRange(String start, String end);
 
-	List<ProductBean> getAllProductsByOrder(String type);
+	List<ProductBean> getAllProductsByOrder(String type, String minPrice, String maxPrice);
 
 	List<ProductBean> getMostSaledProducts();
 }
