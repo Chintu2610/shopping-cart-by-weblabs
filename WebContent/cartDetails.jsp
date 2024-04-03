@@ -111,13 +111,38 @@
 						style="width: 50px; height: 50px;"></td>
 					<td><%=product.getProdName()%></td>
 					<td><%=product.getProdPrice()%></td>
-					<td><form method="post" action="./UpdateToCart">
+					
+					
+					
+					
+					<td><%-- <form method="post" action="./UpdateToCart">
 							<input type="number" name="pqty" value="<%=prodQuantity%>"
 								style="max-width: 70px;" min="0"> <input type="hidden"
 								name="pid" value="<%=product.getProdId()%>"> <input
 								type="submit" name="Update" value="Update"
 								style="max-width: 80px;">
-						</form></td>
+						</form> --%>
+							
+					<form id="updateForm" method="post" action="./UpdateToCart">
+					    <input type="number" id="pqty" name="pqty" value="<%= prodQuantity %>" style="max-width: 70px;" min="0">
+					    <input type="hidden" name="pid" value="<%= product.getProdId() %>">
+					</form>
+
+
+<script>
+    document.getElementById('pqty').addEventListener('input', function() {
+        var qtyInput = document.getElementById('pqty');
+        if (qtyInput.value.trim() === '') {
+            qtyInput.value = '1'; // Set value to '0' if empty
+        }
+        document.getElementById('updateForm').submit();
+    });
+</script>
+								<!-- <input
+								type="submit" name="Update" value="Update"
+								style="max-width: 80px;"> -->
+						
+						</td>
 					<td><a
 						href="cartDetails.jsp?add=1&uid=<%=userName%>&pid=<%=product.getProdId()%>&avail=<%=product.getProdQuantity()%>&qty=<%=prodQuantity%>"><i
 							class="fa fa-plus"></i></a></td>

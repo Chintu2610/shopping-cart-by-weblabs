@@ -138,9 +138,61 @@ String pid = request.getParameter("pid");
 					            </div>
 
 			</form>
+			
+		<%-- 	<% 
+			List<RatingBean> x = RatingDAO.getCommentsByProductId(pid);
+			for (RatingBean aaaa : x) {
+			%>
+			<div class="col-md-12 text-center"><div class="form-group">
+		            xx=	<%=aaaa.getComments() %>
+			 </div> </div>
+			
+			<%} %> --%>
+			
 		</div>
 	</div>
+	
+	
+	
+<div class="text-center"
+		style="color: green; font-size: 24px; font-weight: bold;">Reviews</div>
+	<div class="container-fluid">
+		<div class="table-responsive ">
+			<table class="table table-hover table-sm">
+				<thead
+					style="background-color: #115884; color: white; font-size: 18px;">
+										<tr>
+											 <th>Name</th>
+									       
+									        <th>Rating</th>
+									       
+									        <th>Comments</th>
+									<!--         <th>Edit</th>
+									         <th>Delete</th>    --> 
+										</tr>
+									</thead>
+	<% 
+			List<RatingBean> x = RatingDAO.getCommentsByProductId(pid);
+			for (RatingBean aaaa : x) {
+			%>
+			
+			
+<tr>
+  	<td><%=aaaa.getName() %></td>
+  
+   <td><%=aaaa.getRating() %></td>
+ 
+   <td><%=aaaa.getComments() %></td>
 
+
+</tr>
+<%
+}
+%>
+
+								</table>
+								
+								</div></div>
 	<!-- ENd of Product Items List -->
 
 

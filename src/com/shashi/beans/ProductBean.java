@@ -16,7 +16,12 @@ public class ProductBean implements Serializable {
 	private double prodPrice;
 	private int prodQuantity;
 	private InputStream prodImage;
+	private int arrivaldate;
+	private InputStream customerReview;
+	private InputStream saleCount;
 
+	
+	
 	public ProductBean(String prodId, String prodName, String prodType, String prodInfo, double prodPrice,
 			int prodQuantity, InputStream prodImage) {
 		super();
@@ -83,6 +88,30 @@ public class ProductBean implements Serializable {
 
 	public void setProdImage(InputStream prodImage) {
 		this.prodImage = prodImage;
+	}
+
+	public int getArrivaldate() {
+		return arrivaldate;
+	}
+
+	public void setArrivaldate(int arrivaldate) {
+		this.arrivaldate = arrivaldate;
+	}
+
+	public InputStream getCustomerReview() {
+		return customerReview;
+	}
+
+	public void setCustomerReview(InputStream customerReview) {
+		this.customerReview = customerReview;
+	}
+
+	public InputStream getSaleCount() {
+		return saleCount;
+	}
+
+	public void setSaleCount(InputStream saleCount) {
+		this.saleCount = saleCount;
 	}
 
 }

@@ -8,6 +8,7 @@ public class RatingBean {
 	private String email;
 	private String pid;
 	private String comments;
+	private String name;
 	
 	public String getReviewID() {
 		return reviewID;
@@ -38,6 +39,12 @@ public class RatingBean {
 	}
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	
