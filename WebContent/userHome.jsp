@@ -284,7 +284,7 @@
 
                          <button type="submit"
 							formaction="add_review.jsp?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
-							style="background-color: orange;" class="btn btn-primary">Add Review</button>
+							style="background-color: orange;" class="btn btn-primary"> Review</button>
 							<%-- <h1><%=userRatingcount %></h1><br> --%>
 						<%} else {
 						%>

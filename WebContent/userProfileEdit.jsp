@@ -98,7 +98,7 @@
 					</div>
 					
 					</div>
-					<div class="row">
+					<!-- <div class="row">
 					   <div class="col-md-6">
                 		<div class="form-group">
                     <label>Confirm Password<span class="text-danger">*</span></label>
@@ -106,7 +106,7 @@
                 		</div>
             		</div>
            			 <span id="passwordError" style="color: red;"></span>
-					</div>
+					</div> -->
 					
 										<div class="col-md-12 text-center">
 										<div class="form-group">

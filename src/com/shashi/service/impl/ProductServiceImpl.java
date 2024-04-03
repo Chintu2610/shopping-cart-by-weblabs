@@ -42,7 +42,9 @@ public class ProductServiceImpl implements ProductService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("insert into product values(?,?,?,?,?,?,?,NOW(),0)");
+			ps = con.prepareStatement("INSERT INTO product (pid, pname, ptype, pinfo, pprice, pquantity, image, arrivaldate, customerReview, saleCount) VALUES (?,?,?,?,?,?,?,NOW(),0,0)");
+
+		//	ps = con.prepareStatement("insert pid, pname, ptype, pinfo, pprice, pquantity, image, arrivaldate, customerReview, saleCount into product values(?,?,?,?,?,?,?,NOW(),0,0)");
 			ps.setString(1, product.getProdId());
 			ps.setString(2, product.getProdName());
 			ps.setString(3, product.getProdType());
@@ -50,7 +52,10 @@ public class ProductServiceImpl implements ProductService {
 			ps.setDouble(5, product.getProdPrice());
 			ps.setInt(6, product.getProdQuantity());
 			ps.setBlob(7, product.getProdImage());
-
+		//	ps.setInt(8, product.getArrivaldate());
+		//	ps.setBlob(9, product.getCustomerReview());
+			//setBlob(10, product.getSaleCount());
+			//pid, pname, ptype, pinfo, pprice, pquantity, image, arrivaldate, customerReview, saleCount
 			int k = ps.executeUpdate();
 
 			if (k > 0) {
