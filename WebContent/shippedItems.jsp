@@ -80,7 +80,7 @@
 						<td><%=userAddr%></td>
 						<td><%=quantity%></td>
 						<td>Rs. <%=order.getAmount()%></td>
-						<td class="text-success" style="font-weight: bold;">SHIPPED</td>
+						<td class="text-success" style="font-weight: bold;"><%=order.getStatus()%></td>
 						<td><a
 							href="DeliveryServlet?orderid=<%=order.getTransactionId()%>&amount=<%=order.getAmount()%>&userid=<%=userId%>&prodid=<%=order.getProductId()%>"
 							class="btn btn-success">DELIVER NOW</a></td>

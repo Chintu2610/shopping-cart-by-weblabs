@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Ellison Electronics</title>
+<title>Weblabs Electronics</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -60,8 +60,8 @@
 	    double maxPrice = Double.MAX_VALUE; // Default maximum price
 	    String minPriceStr = request.getParameter("minPrice");
 	    String maxPriceStr = request.getParameter("maxPrice");
-
-	   
+	    session.setAttribute("minPriceStr", minPriceStr);
+	    session.setAttribute("maxPriceStr", maxPriceStr);
 		/* if (products.isEmpty()) {
 			message = "No items found for the search '" + (search != null ? search : type) + "'";
 			filteredProducts = prodDao.getAllProducts();
@@ -88,11 +88,11 @@
             <form method="get" id="priceFilterForm" class="form-inline text-center" action="./filterProduct">
                 <div class="form-group">
                     <label for="minPrice">Min Price:</label>
-                    <input type="text" class="form-control" id="minPrice" name="minPrice" placeholder="Min">
-                </div>
+                   <input type="text" class="form-control" id="minPrice" name="minPrice" value="<%= session.getAttribute("minPriceStr") == null ? "" : session.getAttribute("minPriceStr") %>" placeholder="Min">
+				 </div>
                 <div class="form-group">
                     <label for="maxPrice">Max Price:</label>
-                    <input type="text" class="form-control" id="maxPrice" name="maxPrice" placeholder="Max" >
+                    <input type="text" class="form-control" id="maxPrice" name="maxPrice" value="<%=session.getAttribute("maxPriceStr") == null ? "" : session.getAttribute("maxPriceStr") %>"  placeholder="Max" >
                 </div>
                 
             </form>
@@ -106,6 +106,9 @@
             <div class="form-inline text-center">
                 <div class="form-group">
                 <form method="get" id="priceFilterForm" class="form-inline text-center" action="./sortProductSrv">
+                <input type="hidden" id="minPriceStr" name="minPriceStr" value="<%= minPriceStr %>">
+    			<input type="hidden" id="maxPriceStr" name="maxPriceStr" value="<%= maxPriceStr %>">
+ 
                     <label for="sortOptions">Sort By:</label>
                     <select class="form-control" id="sortOptions" name="sortOptions">
                         <option value="lowToHigh">Price: Low to High</option>

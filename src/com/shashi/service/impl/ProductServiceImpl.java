@@ -76,18 +76,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String removeProduct(String prodId) {
 		String status = "Product Removal Failed!";
-
 		Connection con = DBUtil.provideConnection();
-
 		PreparedStatement ps = null;
 		PreparedStatement ps2 = null;
-
 		try {
 			ps = con.prepareStatement("delete from product where pid=?");
 			ps.setString(1, prodId);
-
 			int k = ps.executeUpdate();
-
 			if (k > 0) {
 				status = "Product Removed Successfully!";
 
@@ -98,12 +93,10 @@ public class ProductServiceImpl implements ProductService {
 				ps2.executeUpdate();
 
 			}
-
 		} catch (SQLException e) {
 			status = "Error: " + e.getMessage();
 			e.printStackTrace();
 		}
-
 		DBUtil.closeConnection(con);
 		DBUtil.closeConnection(ps);
 		DBUtil.closeConnection(ps2);
@@ -304,7 +297,7 @@ public class ProductServiceImpl implements ProductService {
 		return products;
 	}
 	@Override
-	public List<ProductBean> getAllProductsByOrder(String sortOption) {
+	public List<ProductBean> getAllProductsByOrder(String sortOption, String minPrice, String maxPrice) {
 		List<ProductBean> products = new ArrayList<ProductBean>();
 
 		Connection con = DBUtil.provideConnection();
@@ -313,18 +306,69 @@ public class ProductServiceImpl implements ProductService {
 		ResultSet rs = null;
 
 		try {
+			if(minPrice == null || minPrice.isEmpty() || minPrice.equals("null")) {
 			if(sortOption.equals("lowToHigh"))
 			{
-				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by pprice asc");
+				ps = con.prepareStatement("SELECT * FROM product order by pprice asc");
 			}else if(sortOption.equals("highToLow"))
 			{
-				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by pprice desc");
+				ps = con.prepareStatement("SELECT * FROM product order by pprice desc");
 			} else if(sortOption.equals("avgCustomerReview"))
 			{
-				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by customerReview");
+				ps = con.prepareStatement("SELECT p.`pid`,\r\n"
+						+ "    min(p.`pname`) pname,\r\n"
+						+ "    min(p.`ptype`) ptype,\r\n"
+						+ "    min(p.`pinfo`) pinfo,\r\n"
+						+ "	min(p.`pprice`) pprice,\r\n"
+						+ "    min(p.`pquantity`) pquantity,\r\n"
+						+ "    min(p.`image`) image,\r\n"
+						+ "    min(p.`arrivaldate`) arrivaldate,\r\n"
+						+ "    count(p.`customerReview`) custreview,\r\n"
+						+ "    min(p.`saleCount`)  saleCount,\r\n"
+						+ "    max(r.rating) rating\r\n"
+						+ "FROM product p\r\n"
+						+ "\r\n"
+						+ "left JOIN review r ON p.pid = r.pid\r\n"
+						
+						+ "group by \r\n"
+						+ "p.`pid` order by rating desc");
 			} else if(sortOption.equals("newestArrivals"))
 			{
-				ps = con.prepareStatement("SELECT * FROM shopping-cart.product order by newestArrivals");
+				ps = con.prepareStatement("SELECT * FROM product order by arrivaldate desc");
+			}
+			}else
+			{
+				if(sortOption.equals("lowToHigh"))
+				{
+					ps = con.prepareStatement("SELECT * FROM product where pprice between ? and ? order by pprice asc");
+				}else if(sortOption.equals("highToLow"))
+				{
+					ps = con.prepareStatement("SELECT * FROM product where pprice between ? and ? order by pprice desc");
+				} else if(sortOption.equals("avgCustomerReview"))
+				{
+					ps = con.prepareStatement("SELECT p.`pid`,\r\n"
+							+ "    min(p.`pname`) pname,\r\n"
+							+ "    min(p.`ptype`) ptype,\r\n"
+							+ "    min(p.`pinfo`) pinfo,\r\n"
+							+ "	min(p.`pprice`) pprice,\r\n"
+							+ "    min(p.`pquantity`) pquantity,\r\n"
+							+ "    min(p.`image`) image,\r\n"
+							+ "    min(p.`arrivaldate`) arrivaldate,\r\n"
+							+ "    count(p.`customerReview`) custreview,\r\n"
+							+ "    min(p.`saleCount`)  saleCount,\r\n"
+							+ "    max(r.rating) rating\r\n"
+							+ "FROM product p\r\n"
+							+ "\r\n"
+							+ "left JOIN review r ON p.pid = r.pid\r\n"
+							+ "where p.pprice between ? and ?\r\n"
+							+ "group by \r\n"
+							+ "p.`pid` order by rating desc");
+				} else if(sortOption.equals("newestArrivals"))
+				{
+					ps = con.prepareStatement("SELECT * FROM product where pprice between ? and ? order by arrivaldate desc");
+				}
+				ps.setString(1, minPrice);
+				ps.setString(2, maxPrice);
 			}
 			
 			rs = ps.executeQuery();
@@ -407,7 +451,7 @@ public class ProductServiceImpl implements ProductService {
 
 		try {
 			ps = con.prepareStatement(
-					"SELECT * FROM shopping-cart.product where lower(ptype) like ? or lower(pname) like ? or lower(pinfo) like ?");
+					"SELECT * FROM product where lower(ptype) like ? or lower(pname) like ? or lower(pinfo) like ?");
 			search = "%" + search + "%";
 			ps.setString(1, search);
 			ps.setString(2, search);

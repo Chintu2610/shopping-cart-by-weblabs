@@ -28,12 +28,13 @@ public class SortProductSrv extends HttpServlet {
 
 		
 	    String sortOption = request.getParameter("sortOptions");
-	    
-	    
+	    String minPrice=request.getParameter("minPriceStr");
+	    String maxPrice=request.getParameter("maxPriceStr");
+		  
 		response.setContentType("text/html");
 		ProductServiceImpl prodDao = new ProductServiceImpl();
 		List<ProductBean> products = new ArrayList<ProductBean>();
-		products=prodDao.getAllProductsByOrder(sortOption);
+		products=prodDao.getAllProductsByOrder(sortOption,minPrice,maxPrice);
 		
 		 
 			request.setAttribute("sortProducts", products);
