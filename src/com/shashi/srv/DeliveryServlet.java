@@ -44,7 +44,8 @@ public class DeliveryServlet extends HttpServlet {
 		if ("FAILURE".equalsIgnoreCase(status)) {
 			pagename = "unshippedItems.jsp";
 		} else {
-			MailMessage.orderDelivered(userName, new UserServiceImpl().getFName(userName), orderId, amount);
+//			MailMessage.orderDelivered(userName, new UserServiceImpl().getFName(userName), orderId, amount);
+			DeliveryMail.sendLinkEmail(userName, new UserServiceImpl().getFName(userName), orderId, amount);
 		}
 		PrintWriter pw = response.getWriter();
 		response.setContentType("text/html");
