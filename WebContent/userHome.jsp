@@ -61,23 +61,7 @@
         color: gold; /* Color of filled star */
     }
 </style> 
-<!-- <script>  
-    // Function to fetch user count using AJAX
-    function fetchUserCount(userRatingcount, productId) {
-    	console.log("userRatingcount: " + userRatingcount+"pid"+productId);
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-        	debugger;
-            if (this.readyState == 4 && this.status == 200) {
-            	
-                var userCountElement = document.getElementById('userCount_' + productId);
-                userCountElement.innerHTML = 'User Count: ' + this.responseText;
-            }
-        };
-     /*    xhttp.open("GET", "getUserCount?productId=" + productId, true);
-        xhttp.send(); */
-    }
-</script> -->
+
     
 </head>
 <body style="background-color: #ffd77c4f;">
@@ -325,11 +309,14 @@
 												<!-- End previous row and start a new row -->
 												<div class="row text-center">
 
-													<% ProductServiceImpl prodDao1=new ProductServiceImpl();
+													<% int  userRatingcount2 =0;
+													ProductServiceImpl prodDao1=new ProductServiceImpl();
 														List<ProductBean> products1=prodDao1.getMostSaledProducts();
 														for (ProductBean product : products1) {
 														int cartQty = new CartServiceImpl().getCartItemCount(userName,
 														product.getProdId());
+														  double averageRating2 = RatingDAO.getAverageRatingByProductId(product.getProdId());
+														  userRatingcount2 = RatingDAO.getUserCountByEmail(product.getProdId());
 														%>
 														<div class="col-sm-4" style='height: 350px;'>
 															<div class="thumbnail">
@@ -349,6 +336,42 @@
 																		Rs
 																		<%=product.getProdPrice()%>
 																	</p>
+<span class="star-rating" id="starRating2_<%=product.getProdId()%>"></span>&nbsp;&nbsp;(<span><%=userRatingcount2%></span>)
+
+
+<script>
+    generateStarRating(<%= averageRating2 %>, 'starRating2_<%=product.getProdId()%>');
+
+    function generateStarRating(averageRating2, containerId) {
+        console.log("Average Rating: " + averageRating2);
+        var starRatingContainer = document.getElementById(containerId);
+        starRatingContainer.innerHTML = ""; // Clear any existing stars
+
+        var totalStars = 5;
+        var fullStars = Math.floor(averageRating2); // Number of full stars
+        var remainder = averageRating2 - fullStars; // Fractional part for half star
+
+        // Add full stars
+        for (var i = 0; i < fullStars; i++) {
+            starRatingContainer.innerHTML += '<span class="fa fa-star checked"></span>';
+        }
+
+        // Add half star if needed
+        if (remainder >= 0.25 && remainder <= 0.75) {
+            starRatingContainer.innerHTML += '<span class="fa fa-star-half checked"></span>';
+            fullStars++; // Increment fullStars to maintain the total count
+        }
+
+        // Add empty stars to fill up the remaining space
+        for (var i = fullStars; i < totalStars; i++) {
+            starRatingContainer.innerHTML += '<span class="fa fa-star"></span>';
+        }
+    }
+</script>
+
+    
+				
+				
 																	<form method="post">
 																		<% if (cartQty==0) { %>
 																			<button type="submit"
@@ -359,6 +382,14 @@
 																			<button type="submit"
 																				formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
 																				class="btn btn-primary">Buy Now</button>
+																				
+																				      <button type="submit"
+							formaction="add_review.jsp?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							style="background-color: orange;" class="btn btn-primary">Add Review</button>
+							<%-- <h1><%=userRatingcount %></h1><br> --%>
+
+																				
+																				
 																			<% } else { %>
 																				<button type="submit"
 																					formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"
