@@ -81,14 +81,14 @@ public class OrderServiceImpl implements OrderService {
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement("insert into orders values(?,?,?,?,?)");
+			ps = con.prepareStatement("insert into orders values(?,?,?,?,?,?)");
 
 			ps.setString(1, order.getTransactionId());
 			ps.setString(2, order.getProductId());
 			ps.setInt(3, order.getQuantity());
 			ps.setDouble(4, order.getAmount());
 			ps.setInt(5, 0);
-
+			ps.setString(6, "Not Delivered");
 			int k = ps.executeUpdate();
 
 			if (k > 0)
@@ -285,7 +285,7 @@ public class OrderServiceImpl implements OrderService {
 
 		    // Update product table
 		    if (k1 > 0) { // Only update product if the order update succeeds
-		        psProduct = con.prepareStatement("UPDATE product SET saleCount=saleCount+1 WHERE prodid=?");
+		        psProduct = con.prepareStatement("UPDATE product SET saleCount=saleCount+1 WHERE pid=?");
 		        psProduct.setString(1, prodId);
 		        int k2 = psProduct.executeUpdate();
 

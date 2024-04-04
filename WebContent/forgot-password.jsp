@@ -56,7 +56,7 @@
                         <% } %>
 							
 							
-							<!-- Account Form -->
+							
 							<form method="post" action="./PasswordResetServlet">
 								<br><br><div class="form-group">
 									<label>Email Address</label>

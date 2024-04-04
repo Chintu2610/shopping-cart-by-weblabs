@@ -2,7 +2,10 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page language="java" %>
 <%@ page errorPage="" %>
-
+<%
+// String Email = request.getParameter("Email");
+String Email = (String) session.getAttribute("email");
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,12 +43,15 @@
                                         <h2>Welcome to Reset Password</h2><br />
                                     </div>
                                     <form class="singup-form contact-form" method="GET" action="./ResetPasswordServlet">
-                                        <div class="form-group">
+                                       <!--  <div class="form-group">
                                             <label for="email">Enter email</label>
                                             <input type="text" class="form-control" name="email"
                                                 placeholder="Enter new password" required>
-                                        </div>
-                                        
+                                        </div> -->
+                                        <div class="form-group">
+   										<!--  <label for="email">Enter email</label> -->
+   										 <input type="hidden" class="form-control" name="email" value="<%= Email %>" required >
+										</div>
                                         <div class="form-group">
                                             <label>New Password</label>
                                             <input type="password" class="form-control" name="newpassword"
